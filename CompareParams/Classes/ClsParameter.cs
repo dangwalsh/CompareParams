@@ -39,7 +39,7 @@ namespace CompareParams.Classes
         /// <summary>
         /// Method to return parameter value
         /// </summary>
-        /// <returns>string</returns>
+        /// <returns>String</returns>
         String GetValue()
         {
             switch (_Parameter.StorageType)

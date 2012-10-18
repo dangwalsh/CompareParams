@@ -9,16 +9,29 @@ namespace CompareParams.Classes
 {
     class ClsCategory
     {
-        private Dictionary<string, Category> _Cat;
+        private Category _Cat;
+        private List<Element> _InstanceElements;
 
-        public Dictionary<string, Category> Cat
+        public String CatName
         {
-            get { return _Cat; }
+            get { return _Cat.Name; }
         }
 
-        public ClsCategory()
+        public List<Element> InstanceElements
         {
+            get { return _InstanceElements; }
+        }
 
+        public ClsCategory(Category cat, Document doc)
+        {
+            _Cat = cat;
+
+            FilteredElementCollector col = new FilteredElementCollector(doc);
+
+            col.OfCategoryId(cat.Id);
+            col.WhereElementIsNotElementType();
+
+            _InstanceElements = col.ToElements().ToList();
         }
     }
 }
