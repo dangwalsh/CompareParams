@@ -8,6 +8,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
 using CompareParams.UI;
+using CompareParams.Classes;
 
 namespace CompareParams
 {
@@ -25,7 +26,7 @@ namespace CompareParams
         {
             try
             {
-                FormCompare formCompare = new FormCompare();
+                FormCompare formCompare = new FormCompare(new ClsSettings (commandData, elements));
                 formCompare.ShowDialog();
 
                 return Result.Succeeded;

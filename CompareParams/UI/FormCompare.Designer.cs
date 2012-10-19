@@ -35,6 +35,10 @@
             this.comboInst = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.InstanceName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HostName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.InstanceValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HostValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
@@ -75,9 +79,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(23, 87);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 13);
+            this.label4.Size = new System.Drawing.Size(46, 13);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Properties";
+            this.label4.Text = "Property";
             // 
             // comboInstProp
             // 
@@ -105,6 +109,7 @@
             this.comboInst.Name = "comboInst";
             this.comboInst.Size = new System.Drawing.Size(240, 21);
             this.comboInst.TabIndex = 0;
+            this.comboInst.SelectedIndexChanged += new System.EventHandler(this.comboInst_SelectedIndexChanged);
             // 
             // groupBox2
             // 
@@ -112,9 +117,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.dataGridView1);
-            this.groupBox2.Location = new System.Drawing.Point(13, 169);
+            this.groupBox2.Location = new System.Drawing.Point(13, 195);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(759, 343);
+            this.groupBox2.Size = new System.Drawing.Size(759, 317);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Results";
@@ -123,13 +128,53 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.InstanceName,
+            this.HostName,
+            this.InstanceValue,
+            this.HostValue});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.GridColor = System.Drawing.SystemColors.ControlLight;
             this.dataGridView1.Location = new System.Drawing.Point(3, 16);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(753, 324);
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.Size = new System.Drawing.Size(753, 298);
             this.dataGridView1.TabIndex = 0;
+            // 
+            // InstanceName
+            // 
+            this.InstanceName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.InstanceName.DataPropertyName = "InstanceName";
+            this.InstanceName.HeaderText = "Instance Name";
+            this.InstanceName.Name = "InstanceName";
+            this.InstanceName.ReadOnly = true;
+            // 
+            // HostName
+            // 
+            this.HostName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HostName.DataPropertyName = "HostName";
+            this.HostName.HeaderText = "Host Name";
+            this.HostName.Name = "HostName";
+            this.HostName.ReadOnly = true;
+            // 
+            // InstanceValue
+            // 
+            this.InstanceValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.InstanceValue.DataPropertyName = "InstanceValue";
+            this.InstanceValue.HeaderText = "Instance Value";
+            this.InstanceValue.Name = "InstanceValue";
+            this.InstanceValue.ReadOnly = true;
+            // 
+            // HostValue
+            // 
+            this.HostValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HostValue.DataPropertyName = "HostValue";
+            this.HostValue.HeaderText = "Host Value";
+            this.HostValue.Name = "HostValue";
+            this.HostValue.ReadOnly = true;
             // 
             // btnCancel
             // 
@@ -151,6 +196,7 @@
             this.btnOk.TabIndex = 3;
             this.btnOk.Text = "Ok";
             this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // btnExport
             // 
@@ -238,9 +284,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(26, 87);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 13);
+            this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 10;
-            this.label3.Text = "Properties";
+            this.label3.Text = "Property";
             // 
             // comboHostProp
             // 
@@ -268,6 +314,7 @@
             this.comboHost.Name = "comboHost";
             this.comboHost.Size = new System.Drawing.Size(240, 21);
             this.comboHost.TabIndex = 0;
+            this.comboHost.SelectedIndexChanged += new System.EventHandler(this.comboHost_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -306,6 +353,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "FormCompare";
             this.Text = "Compare Properties";
+            this.Shown += new System.EventHandler(this.FormCompare_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -343,5 +391,9 @@
         private System.Windows.Forms.ComboBox comboHost;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn InstanceName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn HostName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn InstanceValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn HostValue;
     }
 }

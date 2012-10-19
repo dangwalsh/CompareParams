@@ -7,7 +7,7 @@ using Autodesk.Revit.DB;
 
 namespace CompareParams.Classes
 {
-    class ClsParameter
+    public class ClsParameter
     {
         private Parameter _Parameter;
 
