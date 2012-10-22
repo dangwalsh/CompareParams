@@ -16,7 +16,7 @@ namespace CompareParams.UI
     public partial class FormCompare : System.Windows.Forms.Form
     {
         private ClsSettings _Settings = null;
-        private List<ClsPair> _Pairs = new List<ClsPair>();
+        private BindingList<ClsPair> _Pairs = new BindingList<ClsPair>();
 
         public FormCompare(ClsSettings settings)
         {
@@ -193,6 +193,7 @@ namespace CompareParams.UI
                     MessageBox.Show(ex.Message);
                 }
             }
+
         }
 
     }

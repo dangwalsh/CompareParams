@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 using Autodesk.Revit.DB;
 
@@ -25,6 +26,7 @@ namespace CompareParams.Classes
         public String ValueString
         {
             get { return GetValue(); }
+            set { SetValue(value); }
         }
 
         /// <summary>
@@ -37,7 +39,7 @@ namespace CompareParams.Classes
         }
 
         /// <summary>
-        /// Method to return parameter value
+        /// Get the value of the parameter
         /// </summary>
         /// <returns>String</returns>
         String GetValue()
@@ -61,6 +63,47 @@ namespace CompareParams.Classes
 
                 default:
                     return "";
+            }
+        }
+        /// <summary>
+        /// Set the value of the parameter
+        /// </summary>
+        /// <param name="value">object</param>
+        void SetValue(object value)
+        {
+            if (_Parameter.IsReadOnly) return;
+
+            try
+            {
+                switch (_Parameter.StorageType)
+                {
+                    case StorageType.Double:
+                        _Parameter.SetValueString(value as string);
+                        break;
+
+                    case StorageType.ElementId:
+                        _Parameter.Set(value as ElementId);
+                        break;
+
+                    case StorageType.Integer:
+                        _Parameter.SetValueString(value as string);
+                        break;
+
+                    case StorageType.None:
+                        _Parameter.SetValueString(value as string);
+                        break;
+
+                    case StorageType.String:
+                        _Parameter.Set(value as string);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

@@ -90,6 +90,7 @@
             this.comboInstProp.Location = new System.Drawing.Point(26, 107);
             this.comboInstProp.Name = "comboInstProp";
             this.comboInstProp.Size = new System.Drawing.Size(240, 21);
+            this.comboInstProp.Sorted = true;
             this.comboInstProp.TabIndex = 7;
             // 
             // label1
@@ -108,6 +109,7 @@
             this.comboInst.Location = new System.Drawing.Point(26, 46);
             this.comboInst.Name = "comboInst";
             this.comboInst.Size = new System.Drawing.Size(240, 21);
+            this.comboInst.Sorted = true;
             this.comboInst.TabIndex = 0;
             this.comboInst.SelectedIndexChanged += new System.EventHandler(this.comboInst_SelectedIndexChanged);
             // 
@@ -139,7 +141,6 @@
             this.dataGridView1.GridColor = System.Drawing.SystemColors.ControlLight;
             this.dataGridView1.Location = new System.Drawing.Point(3, 16);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.Size = new System.Drawing.Size(753, 298);
             this.dataGridView1.TabIndex = 0;
@@ -166,7 +167,6 @@
             this.InstanceValue.DataPropertyName = "InstanceValue";
             this.InstanceValue.HeaderText = "Instance Value";
             this.InstanceValue.Name = "InstanceValue";
-            this.InstanceValue.ReadOnly = true;
             // 
             // HostValue
             // 
@@ -174,7 +174,6 @@
             this.HostValue.DataPropertyName = "HostValue";
             this.HostValue.HeaderText = "Host Value";
             this.HostValue.Name = "HostValue";
-            this.HostValue.ReadOnly = true;
             // 
             // btnCancel
             // 
@@ -295,6 +294,7 @@
             this.comboHostProp.Location = new System.Drawing.Point(29, 107);
             this.comboHostProp.Name = "comboHostProp";
             this.comboHostProp.Size = new System.Drawing.Size(240, 21);
+            this.comboHostProp.Sorted = true;
             this.comboHostProp.TabIndex = 7;
             // 
             // label6
@@ -313,6 +313,7 @@
             this.comboHost.Location = new System.Drawing.Point(29, 46);
             this.comboHost.Name = "comboHost";
             this.comboHost.Size = new System.Drawing.Size(240, 21);
+            this.comboHost.Sorted = true;
             this.comboHost.TabIndex = 0;
             this.comboHost.SelectedIndexChanged += new System.EventHandler(this.comboHost_SelectedIndexChanged);
             // 
