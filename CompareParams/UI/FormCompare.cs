@@ -17,6 +17,7 @@ namespace CompareParams.UI
     {
         private ClsSettings _Settings = null;
         private BindingList<ClsPair> _Pairs = new BindingList<ClsPair>();
+        private List<ClsResults> _Results = new List<ClsResults>();
 
         public FormCompare(ClsSettings settings)
         {
@@ -33,6 +34,7 @@ namespace CompareParams.UI
             {
                 try
                 {
+                    //_Results.Add(new ClsResults(_Settings.Doc, elem, this.comboInstProp.SelectedItem.ToString()));
                     FamilyInstance inst = elem as FamilyInstance;
 
                     if (inst != null)
@@ -44,16 +46,17 @@ namespace CompareParams.UI
 
                         if (paramInst.ParameterObject != null && paramHost.ParameterObject != null)
                         {
-                            _Pairs.Add(new ClsPair(inst.Name, host.Name, paramInst.ValueString, paramHost.ValueString));
+                            _Results.Add(new ClsResults(_Settings.Doc, paramHost, paramInst, host.Name, inst.Name));
                         }
                         else
                         {
                             Element instType = _Settings.Doc.GetElement(inst.GetTypeId());
                             Element hostType = _Settings.Doc.GetElement(host.GetTypeId());
+
                             paramInst = new ClsParameter(instType.get_Parameter(this.comboInstProp.SelectedItem.ToString()));
                             paramHost = new ClsParameter(hostType.get_Parameter(this.comboInstProp.SelectedItem.ToString()));
 
-                            _Pairs.Add(new ClsPair(inst.Name, host.Name, paramInst.ValueString, paramHost.ValueString));
+                            _Results.Add(new ClsResults(_Settings.Doc, paramHost, paramInst, host.Name, inst.Name));
                         }
 
                     }
@@ -63,9 +66,7 @@ namespace CompareParams.UI
                 {
                     MessageBox.Show(ex.Message);
                 }
-
             }
-
             LoadResults();
         }
 
@@ -88,15 +89,8 @@ namespace CompareParams.UI
             {
                 foreach (ClsParameter param in catInst.InstanceParameters)
                 {
-                    //if (param.ParameterObject.StorageType == StorageType.String)
-                    //{
-                    //    // possible handling of string parameters
-                    //}
-                    //else
-                    //{
-                        if(!this.comboInstProp.Items.Contains(param.ParameterObject.Definition.Name))
-                            this.comboInstProp.Items.Add(param.ParameterObject.Definition.Name);
-                    //}
+                    if(!this.comboInstProp.Items.Contains(param.ParameterObject.Definition.Name))
+                        this.comboInstProp.Items.Add(param.ParameterObject.Definition.Name);
                 }
                 if (this.comboInstProp.Items != null) this.comboInstProp.SelectedIndex = 0;
             }
@@ -126,14 +120,7 @@ namespace CompareParams.UI
             {
                 foreach (ClsParameter param in catHost.InstanceParameters)
                 {
-                    if (param.ParameterObject.StorageType == StorageType.String)
-                    {
-                        // possible handling of string parameters
-                    }
-                    else
-                    {
-                        this.comboHostProp.Items.Add(param.ParameterObject.Definition.Name);
-                    }
+                    this.comboHostProp.Items.Add(param.ParameterObject.Definition.Name);
                 }
                 if (this.comboHostProp.Items != null) this.comboHostProp.SelectedIndex = 0;
             }
@@ -141,12 +128,12 @@ namespace CompareParams.UI
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         void LoadResults()
         {
-            dataGridView1.DataSource = _Pairs;
+            this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.DataSource = _Results;
         }
 
         private void FormCompare_Shown(object sender, EventArgs e)
@@ -156,6 +143,7 @@ namespace CompareParams.UI
                 this.comboInst.DataSource = _Settings.InstCategoryList;
                 this.comboInst.DisplayMember = "CatName";
                 this.comboInst.SelectedIndex = 0;
+
                 this.comboHost.DataSource = _Settings.HostCategoryList;
                 this.comboHost.DisplayMember = "CatName";
                 this.comboHost.SelectedIndex = 0;
@@ -178,23 +166,26 @@ namespace CompareParams.UI
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            Transaction t = new Transaction(_Settings.Doc, "Compare Properties");
-
-            if (t.Start() == TransactionStatus.Started)
+            try
             {
-                try
-                {
-                    RunComparison();
-                    t.Commit();
-                }
-                catch (Exception ex)
-                {
-                    t.RollBack();
-                    MessageBox.Show(ex.Message);
-                }
+                RunComparison();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
 
         }
 
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            _Results.Clear();
+            RunComparison();
+            dataGridView1.Refresh();
+        }
     }
 }

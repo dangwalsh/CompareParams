@@ -33,10 +33,12 @@
     <Reference Include="RevitAPI">
       <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit Architecture 2013\Program\RevitAPI.dll</HintPath>
       <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="RevitAPIUI">
       <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit Architecture 2013\Program\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,6 +55,7 @@
     <Compile Include="Classes\ClsPair.cs" />
     <Compile Include="Classes\ClsOperator.cs" />
     <Compile Include="Classes\ClsParameter.cs" />
+    <Compile Include="Classes\ClsResults.cs" />
     <Compile Include="Classes\ClsSettings.cs" />
     <Compile Include="Classes\Entry\Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,6 +75,9 @@
     <EmbeddedResource Include="UI\FormCompare.resx">
       <DependentUpon>FormCompare.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

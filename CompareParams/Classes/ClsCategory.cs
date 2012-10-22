@@ -11,8 +11,6 @@ namespace CompareParams.Classes
     {
         private Category _Cat;
         private List<Element> _InstanceElements;
-        private List<Element> _TypeElements;
-        private List<Element> _AllElements;
         private List<ClsParameter> _InstanceParameters = new List<ClsParameter>();
 
         public String CatName
@@ -23,11 +21,6 @@ namespace CompareParams.Classes
         public List<Element> InstanceElements
         {
             get { return _InstanceElements; }
-        }
-
-        public List<Element> TypeElements
-        {
-            get { return _TypeElements; }
         }
 
         public List<ClsParameter> InstanceParameters
@@ -45,13 +38,6 @@ namespace CompareParams.Classes
             //col.WhereElementIsNotElementType();
 
             _InstanceElements = col.ToElements().ToList();
-
-            //col.OfCategoryId(cat.Id);
-            //col.WhereElementIsElementType();
-
-            //_TypeElements = col.ToElements().ToList();
-
-            //_AllElements = _InstanceElements.Concat(_TypeElements).ToList();
         }
 
         public void GetInstanceParameters()
