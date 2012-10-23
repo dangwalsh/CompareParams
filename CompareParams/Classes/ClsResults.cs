@@ -14,26 +14,22 @@ namespace CompareParams
     public class ClsResults //: INotifyPropertyChanged
     {
         private Document _Doc;
-        private Element _Elem;
-        private Element _HostElem;
-        private String _Param;
+        private int _InstanceId;
+        private int _HostId;
         private ClsParameter _HostParameter;
         private ClsParameter _InstanceParameter;
         private String _HostName;
         private String _InstanceName;
         private String _HostValue;
         private String _InstanceValue;
-        private bool _IsFamilyType = false;
 
-        //public event PropertyChangedEventHandler PropertyChanged;
-
-        public Element Elem
+        public int InstanceId
         {
-            get { return _Elem; }
+            get { return _InstanceId; }
         }
-        public Element HostElem
+        public int HostId
         {
-            get { return _HostElem; }
+            get { return _HostId; }
         }
         public ClsParameter HostParameter
         {
@@ -98,13 +94,21 @@ namespace CompareParams
             }
         }
 
-        public ClsResults(Document doc, ClsParameter h, ClsParameter i, String hName, String iName)
+        public ClsResults(Document doc,
+                          int instId,
+                          int hostId,
+                          ClsParameter h, 
+                          ClsParameter i, 
+                          String hName, 
+                          String iName)
         {
             _Doc = doc;
+            _InstanceId = instId;
+            _HostId = hostId;
             _HostParameter = h;
             _InstanceParameter = i;
-            _HostValue = h.ValueString;
-            _InstanceValue = i.ValueString;
+            _HostValue = h.Value;
+            _InstanceValue = i.Value;
             _HostName = hName;
             _InstanceName = iName;
         }

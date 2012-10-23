@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ClsCategory.cs" />
-    <Compile Include="Classes\ClsPair.cs" />
     <Compile Include="Classes\ClsOperator.cs" />
     <Compile Include="Classes\ClsParameter.cs" />
     <Compile Include="Classes\ClsResults.cs" />
@@ -67,7 +66,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="RevitCommand.addin">
+    <Content Include="CompareParams.addin">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

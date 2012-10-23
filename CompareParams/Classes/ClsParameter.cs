@@ -20,13 +20,19 @@ namespace CompareParams.Classes
             get { return _Parameter; }
         }
 
+        public String Value
+        {
+            get { return GetValue(false); }
+            set { SetValue(value, false); }
+        }
+
         /// <summary>
         /// Getter for the parameter value
         /// </summary>
         public String ValueString
         {
-            get { return GetValue(); }
-            set { SetValue(value); }
+            get { return GetValue(true); }
+            set { SetValue(value, true); }
         }
 
         /// <summary>
@@ -42,15 +48,31 @@ namespace CompareParams.Classes
         /// Get the value of the parameter
         /// </summary>
         /// <returns>String</returns>
-        String GetValue()
+        String GetValue(bool asString)
         {
             switch (_Parameter.StorageType)
             {
                 case StorageType.Double:
-                    return _Parameter.AsDouble().ToString();
+                    if (asString)
+                    {
+                        return _Parameter.AsValueString();
+                    }
+                    else
+                    {
+                        return _Parameter.AsDouble().ToString();
+                    }
 
                 case StorageType.ElementId:
-                    return _Parameter.AsElementId().ToString();
+                    if (asString)
+                    {
+                        ElementId eid = new ElementId(_Parameter.AsElementId().IntegerValue);
+                        Element obj = _Parameter.Element.Document.GetElement(eid);
+                        return obj.Name;
+                    }
+                    else
+                    {
+                        return _Parameter.AsElementId().ToString();
+                    }
 
                 case StorageType.Integer:
                     return _Parameter.AsInteger().ToString();
@@ -69,7 +91,7 @@ namespace CompareParams.Classes
         /// Set the value of the parameter
         /// </summary>
         /// <param name="value">object</param>
-        void SetValue(object value)
+        void SetValue(object value, bool asString)
         {
             if (_Parameter.IsReadOnly) return;
 
@@ -78,7 +100,14 @@ namespace CompareParams.Classes
                 switch (_Parameter.StorageType)
                 {
                     case StorageType.Double:
-                        _Parameter.SetValueString(value as string);
+                        if (asString)
+                        {
+                            _Parameter.SetValueString(value as string);
+                        }
+                        else
+                        {
+                            _Parameter.Set((double)value);
+                        }
                         break;
 
                     case StorageType.ElementId:

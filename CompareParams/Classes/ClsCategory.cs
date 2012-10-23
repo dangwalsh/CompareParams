@@ -11,7 +11,8 @@ namespace CompareParams.Classes
     {
         private Category _Cat;
         private List<Element> _InstanceElements;
-        private List<ClsParameter> _InstanceParameters = new List<ClsParameter>();
+        private List<ClsParameter> _AllParameters = new List<ClsParameter>();
+        private Document _Doc;
 
         public String CatName
         {
@@ -23,44 +24,53 @@ namespace CompareParams.Classes
             get { return _InstanceElements; }
         }
 
-        public List<ClsParameter> InstanceParameters
+        public List<ClsParameter> AllParameters
         {
-            get { return _InstanceParameters; }
+            get { return _AllParameters; }
         }
 
         public ClsCategory(Category cat, Document doc)
         {
             _Cat = cat;
+            _Doc = doc;
 
             FilteredElementCollector col = new FilteredElementCollector(doc);
-
-            col.OfCategoryId(cat.Id);
-            //col.WhereElementIsNotElementType();
+            col.OfCategoryId(cat.Id).WhereElementIsNotElementType();
 
             _InstanceElements = col.ToElements().ToList();
         }
 
-        public void GetInstanceParameters()
+        public void GetAllParameters()
         {
             foreach (Element elem in _InstanceElements)
             {
-                foreach (Parameter param in elem.Parameters)
+                Element elemType = _Doc.GetElement(elem.GetTypeId());
+
+                ParamItor(elem);
+                ParamItor(elemType);
+            }
+        }
+
+        void ParamItor (Element elem)
+        {
+            foreach (Parameter param in elem.Parameters)
+            {
+                switch (param.StorageType)
                 {
-                    switch (param.StorageType)
-                    {
-                        case StorageType.Double:
-                            _InstanceParameters.Add(new ClsParameter(param));
-                            break;
-                        case StorageType.String:
-                            _InstanceParameters.Add(new ClsParameter(param));
-                            break;
-                        case StorageType.Integer:
-                            if (param.Definition.ParameterType != ParameterType.YesNo)
-                                _InstanceParameters.Add(new ClsParameter(param));
-                            break;
-                        default:
-                            break;
-                    }
+                    case StorageType.ElementId:
+                        break;
+                    case StorageType.Double:
+                        _AllParameters.Add(new ClsParameter(param));
+                        break;
+                    case StorageType.String:
+                        _AllParameters.Add(new ClsParameter(param));
+                        break;
+                    case StorageType.Integer:
+                        if (param.Definition.ParameterType != ParameterType.YesNo)
+                            _AllParameters.Add(new ClsParameter(param));
+                        break;
+                    default:
+                        break;
                 }
             }
         }

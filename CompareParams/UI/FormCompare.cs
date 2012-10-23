@@ -16,7 +16,6 @@ namespace CompareParams.UI
     public partial class FormCompare : System.Windows.Forms.Form
     {
         private ClsSettings _Settings = null;
-        private BindingList<ClsPair> _Pairs = new BindingList<ClsPair>();
         private List<ClsResults> _Results = new List<ClsResults>();
 
         public FormCompare(ClsSettings settings)
@@ -28,13 +27,11 @@ namespace CompareParams.UI
         void RunComparison()
         {
             ClsCategory catInst = this.comboInst.SelectedItem as ClsCategory;
-            ClsCategory catHost = this.comboHost.SelectedItem as ClsCategory;
            
             foreach (Element elem in catInst.InstanceElements)
             {
                 try
                 {
-                    //_Results.Add(new ClsResults(_Settings.Doc, elem, this.comboInstProp.SelectedItem.ToString()));
                     FamilyInstance inst = elem as FamilyInstance;
 
                     if (inst != null)
@@ -46,7 +43,7 @@ namespace CompareParams.UI
 
                         if (paramInst.ParameterObject != null && paramHost.ParameterObject != null)
                         {
-                            _Results.Add(new ClsResults(_Settings.Doc, paramHost, paramInst, host.Name, inst.Name));
+                            _Results.Add(new ClsResults(_Settings.Doc, inst.Id.IntegerValue, host.Id.IntegerValue, paramHost, paramInst, host.Name, inst.Name));
                         }
                         else
                         {
@@ -56,7 +53,10 @@ namespace CompareParams.UI
                             paramInst = new ClsParameter(instType.get_Parameter(this.comboInstProp.SelectedItem.ToString()));
                             paramHost = new ClsParameter(hostType.get_Parameter(this.comboInstProp.SelectedItem.ToString()));
 
-                            _Results.Add(new ClsResults(_Settings.Doc, paramHost, paramInst, host.Name, inst.Name));
+                            if (paramInst.ParameterObject != null && paramHost.ParameterObject != null)
+                            {
+                                _Results.Add(new ClsResults(_Settings.Doc, inst.Id.IntegerValue, host.Id.IntegerValue, paramHost, paramInst, host.Name, inst.Name));
+                            }
                         }
 
                     }
@@ -70,7 +70,7 @@ namespace CompareParams.UI
             LoadResults();
         }
 
-        void UpdateInstParameterList()
+        void UpdateParameterList()
         {
             try
             {
@@ -83,11 +83,11 @@ namespace CompareParams.UI
             }
 
             ClsCategory catInst = this.comboInst.SelectedItem as ClsCategory;
-            catInst.GetInstanceParameters();
+            catInst.GetAllParameters();
 
             try
             {
-                foreach (ClsParameter param in catInst.InstanceParameters)
+                foreach (ClsParameter param in catInst.AllParameters)
                 {
                     if(!this.comboInstProp.Items.Contains(param.ParameterObject.Definition.Name))
                         this.comboInstProp.Items.Add(param.ParameterObject.Definition.Name);
@@ -101,39 +101,20 @@ namespace CompareParams.UI
 
         }
 
-        void UpdateHostParameterList()
-        {
-            try
-            {
-                this.comboHostProp.Items.Clear();
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            ClsCategory catHost = this.comboHost.SelectedItem as ClsCategory;
-            catHost.GetInstanceParameters();
-
-            try
-            {
-                foreach (ClsParameter param in catHost.InstanceParameters)
-                {
-                    this.comboHostProp.Items.Add(param.ParameterObject.Definition.Name);
-                }
-                if (this.comboHostProp.Items != null) this.comboHostProp.SelectedIndex = 0;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
         void LoadResults()
         {
-            this.dataGridView1.AutoGenerateColumns = false;
-            this.dataGridView1.DataSource = _Results;
+            try
+            {
+                this.dataGridView1.AutoGenerateColumns = false;
+                this.InstanceValue.HeaderText = "Instance " + this.comboInstProp.SelectedItem.ToString();
+                this.HostValue.HeaderText = "Host " + this.comboInstProp.SelectedItem.ToString();
+                this.dataGridView1.DataSource = _Results;
+                this.dataGridView1.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void FormCompare_Shown(object sender, EventArgs e)
@@ -143,10 +124,6 @@ namespace CompareParams.UI
                 this.comboInst.DataSource = _Settings.InstCategoryList;
                 this.comboInst.DisplayMember = "CatName";
                 this.comboInst.SelectedIndex = 0;
-
-                this.comboHost.DataSource = _Settings.HostCategoryList;
-                this.comboHost.DisplayMember = "CatName";
-                this.comboHost.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -156,12 +133,14 @@ namespace CompareParams.UI
 
         private void comboInst_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateInstParameterList();
-        }
-
-        private void comboHost_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateHostParameterList();
+            try
+            {
+                UpdateParameterList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -178,14 +157,84 @@ namespace CompareParams.UI
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                _Results.Clear();
+                RunComparison();
+                this.dataGridView1.Refresh();
+                this.comboColor.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            _Results.Clear();
-            RunComparison();
-            dataGridView1.Refresh();
+            try
+            {
+                _Results.Clear();
+                RunComparison();
+                this.dataGridView1.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ColorCells()
+        {
+            System.Drawing.Color nocolor = System.Drawing.Color.WhiteSmoke;
+            System.Drawing.Color hilight = System.Drawing.Color.LightSteelBlue;
+            int s = this.comboColor.SelectedIndex;
+
+            foreach (DataGridViewRow row in this.dataGridView1.Rows)
+            {
+                try
+                {
+                    object val1 = row.Cells[4].Value;
+                    object val2 = row.Cells[5].Value;
+
+                    if (val1 != null && val2 != null)
+                    {
+                        int c = String.Compare(val1.ToString(), val2.ToString());
+
+                        switch (s)
+                        {
+                            case 0:
+                                if (c == 0) row.DefaultCellStyle.BackColor = hilight;
+                                else row.DefaultCellStyle.BackColor = nocolor;
+                                break;
+                            case 1:
+                                if (c != 0) row.DefaultCellStyle.BackColor = hilight;
+                                else row.DefaultCellStyle.BackColor = nocolor;
+                                break;
+                            case 2:
+                                if (c == -1) row.DefaultCellStyle.BackColor = hilight;
+                                else row.DefaultCellStyle.BackColor = nocolor;
+                                break;
+                            case 3:
+                                if (c == 1) row.DefaultCellStyle.BackColor = hilight;
+                                else row.DefaultCellStyle.BackColor = nocolor;
+                                break;
+                            default:
+                                row.DefaultCellStyle.BackColor = nocolor;
+                                break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void comboColor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //ColorCells();
         }
     }
 }

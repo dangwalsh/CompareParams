@@ -13,7 +13,6 @@ namespace CompareParams.Classes
         private ExternalCommandData _CommandData;
         private ElementSet _ElementSet;
         private List<ClsCategory> _InstCategoryList = new List<ClsCategory>();
-        private List<ClsCategory> _HostCategoryList = new List<ClsCategory>();
 
         public Document Doc
         {
@@ -25,28 +24,27 @@ namespace CompareParams.Classes
             get { return _InstCategoryList; }
         }
 
-        public List<ClsCategory> HostCategoryList
-        {
-            get { return _HostCategoryList; }
-        }
+        //public List<ClsCategory> HostCategoryList
+        //{
+        //    get { return _HostCategoryList; }
+        //}
 
         public ClsSettings(ExternalCommandData com, ElementSet set)
         {
             _CommandData = com;
             _ElementSet = set;
 
-            SortedDictionary<String, ClsCategory> catDict = new SortedDictionary<string, ClsCategory>();
+            //SortedDictionary<String, ClsCategory> catDict = new SortedDictionary<string, ClsCategory>();
             foreach (Category cat in Doc.Settings.Categories)
             {
                 ClsCategory c = new ClsCategory(cat, this.Doc);
-                if (c.InstanceElements.Count > 0) catDict.Add(cat.Name, c);
+                if (c.InstanceElements.Count > 0) _InstCategoryList.Add(c);//catDict.Add(cat.Name, c);
             }
 
-            foreach (ClsCategory cat in catDict.Values)
-            {
-                _InstCategoryList.Add(cat);
-                _HostCategoryList.Add(cat);
-            }
+            //foreach (ClsCategory cat in catDict.Values)
+            //{
+            //    _InstCategoryList.Add(cat);
+            //}
         }
     }
 }
